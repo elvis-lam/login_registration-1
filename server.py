@@ -17,16 +17,17 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)  
 app.secret_key = "ThisIsSecret!"
 
-# ==============================================
-
+# ===========================================================================
+#                               INDEX ROUTE
+# ===========================================================================
 @app.route('/')
 def index():
     mysql = connectToMySQL('registrationsdb')
     return render_template('index.html')
-# ==============================================
 
-# REGISTER BUTTON ROUTE
-# ==============================================
+# ===========================================================================
+#                           REGISTER BUTTON ROUTE
+# ===========================================================================
 @app.route('/register', methods=['POST'])
 def register():
 
@@ -88,10 +89,9 @@ def register():
         return redirect('/welcome')
     
 
-
-# ==============================================
-# LOGIN BUTTON ROUTE
-# ==============================================
+# ===========================================================================
+#                              LOGIN BUTTON ROUTE
+# ===========================================================================
 @app.route('/login', methods=['POST'])
 def login():
     
@@ -119,11 +119,10 @@ def login():
         return redirect("/")
 
 
-
-
 # ===========================================================================
-#          after registering/logging in
+#                    after registering/logging in
 # ===========================================================================
+# NEED TO ADD GETTING MESSAGES IN HERE
 
 @app.route('/welcome')
 def welcome():
@@ -131,12 +130,34 @@ def welcome():
     return render_template('messages.html')
 
 
-# ==============================================
+# ===========================================================================
+#                       CREATING A MESSAGE
+# ===========================================================================
+
+@app.route('/create_message', methods=['POST'])
+def create_message():
+    mysql = connectToMySQL("registrationsdb")
+    # query = "INSERT INTO friends (first_name, last_name, occupation, created_at, updated_at) VALUES (%(first_name)s, %(last_name)s, %(occupation)s, NOW(), NOW());"
+    # data = {
+    #          'first_name': request.form['first_name'],
+    #          'last_name':  request.form['last_name'],
+    #          'occupation': request.form['occupation']
+    #        }
+    # new_friend_id = mysql.query_db(query, data)
+    # return redirect('/')
+
+# ===========================================================================
+#                       DELETING A MESSAGE
+# ===========================================================================
 
 
 
-# # CLEAR OUT SESSION WHEN LOG OUT 
-# # =======================================
+
+
+
+# # ===========================================================================
+# #         CLEAR OUT SESSION WHEN LOG OUT 
+# # ===========================================================================
 # @app.route('/reset', methods=['POST'])
 # def resetButton():
 #     return redirect('/destroy_session')
@@ -147,10 +168,11 @@ def welcome():
 #     return redirect('/')
 
 
-# ==============================================
-# starts the server
+# ===========================================================================
+#         START SERVER
+# ===========================================================================
 if __name__ == "__main__":
     app.run(debug=True)
 
-# ==============================================
+
 
