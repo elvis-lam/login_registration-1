@@ -12,26 +12,50 @@
     <!-- Link to jQuery  -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
+    <style>
+        #navbar {
+            margin: 10px 0 20px;
+        }
+        #welcome {
+            color: black;
+            /* font-family: "Lucida Console", 'Courier New', Courier, monospace; */
+            font-size: 2rem;
+            font-family: Optima, IrisUPC, sans-serif;
+        }
+    </style>
 </head>
 
 <body>
+
+    <!-- Nav bar  -->
+    <nav id="navbar" class="navbar navbar-dark" style="background-color: #e3f2fd;">
+        <div></div>
+        <!--empty div to center span text-->
+        <span id="welcome" class="navbar-text justify-content-center">
+            Welcome {{ session['user_name'] }}
+        </span>
+        <form class="form-inline justify-content-end">
+            <button class="btn" type="button">log out</button>
+        </form>
+    </nav>
+
     <div class="container">
 
-        <!-- jumbotron  -->
+        <!-- jumbotron 
         <div class="jumbotron jumbotron-fluid">
             <div class="container">
-                <h1 class="display-4">Success!</h1>
-                <p class="lead"> </p>
+                <h1 class="display-4">Welcome!</h1>
             </div>
-        </div>
-        
+        </div> -->
+
+
         <!-- headers for each column -->
         <div class="row">
             <div class="col">
-                <h3>3 Message(s) for you (Username):</h3>
+                <h4>3 Message(s) for you (Username):</h4>
             </div>
             <div class="col">
-                <h3>Send a message:</h3>
+                <h4>Send a message:</h4>
 
                 <!-- keep a count of messages sent -->
                 <!-- ------------------------------------------ -->
@@ -74,7 +98,7 @@
 
 
                 <!-- CARD: SEND A MESSAGE -->
-                
+
                 <div class="card">
                     <div class="card-body">
 

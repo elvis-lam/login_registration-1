@@ -29,7 +29,6 @@ def index():
 # ==============================================
 @app.route('/register', methods=['POST'])
 def register():
-    print("USER EMAIL", request.form['new-email'])
 
     # name validation
     # --------------------------------------
@@ -83,8 +82,10 @@ def register():
          }
         mysql.query_db(query, data)
         
-        # return render_template('messages.html')
-        return redirect("/")
+        # session['user_id'] = request.form
+        session['user_name'] = request.form['first_name']
+        print('SESSION:', session)
+        return redirect('/welcome')
     
 
 
@@ -95,24 +96,56 @@ def register():
 def login():
     
     # check if email exists in database
+    # --------------------------------------
     mysql = connectToMySQL('registrationsdb')
     query = "SELECT * FROM users WHERE email = %(email)s;"
     data = { "email" : request.form['login-email'] }
     result = mysql.query_db(query, data)
     if result:
         if bcrypt.check_password_hash(result[0]['password_hash'], request.form['password']):
+            
             # if we get True after checking the password, we may put the user id in session
-            session['userid'] = result[0]['id']
+            session['user_id'] = result[0]['id']
+            session['user_name'] = result[0]['first_name']
+            print('SESSION:', session)
+
             # never render on a post, always redirect!
-            return render_template('messages.html')
+            return redirect('/welcome')
     
     # if username & password don't match
-    flash("You could not be logged in", 'login')
-    return redirect("/")
-    # # initiate any flash messages on index.html
-    # # --------------------------------------
-    # if '_flashes' in session.keys():
-    #     return redirect("/")
+    # --------------------------------------
+    else:
+        flash("You could not be logged in", 'login')
+        return redirect("/")
+
+
+
+
+# ===========================================================================
+#          after registering/logging in
+# ===========================================================================
+
+@app.route('/welcome')
+def welcome():
+    print('SESSION:', session)
+    return render_template('messages.html')
+
+
+# ==============================================
+
+
+
+# # CLEAR OUT SESSION WHEN LOG OUT 
+# # =======================================
+# @app.route('/reset', methods=['POST'])
+# def resetButton():
+#     return redirect('/destroy_session')
+# # =======================================
+# @app.route('/destroy_session')
+# def destroySession():
+#     session.clear()
+#     return redirect('/')
+
 
 # ==============================================
 # starts the server

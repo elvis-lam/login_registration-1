@@ -96,7 +96,7 @@
                             {% endwith %}
                         </div>
 
-                        <input name="new-password" type="text" class="form-control" id="password">
+                        <input name="new-password" type="password" class="form-control" id="password">
                     </div>
 
                     <!-- confirm password: matches password -->
@@ -112,7 +112,7 @@
                             {% endwith %}
                         </div>
 
-                        <input name="confirm-password" type="text" class="form-control" id="confirm-pass">
+                        <input name="confirm-password" type="password" class="form-control" id="confirm-pass">
                     </div>
 
                     <button type="submit" class="btn btn-success" id="bttnSubmit">Register!</button>
@@ -133,8 +133,7 @@
                     <!-- password -->
                     <div class="form-group">
                         <label class="labels" for="password">Password:</label>
-
-                        <input name="password" type="text" class="form-control" id="password">
+                        <input name="password" type="password" class="form-control" id="password">
                     </div>
                     <div>
                         {% with errors = get_flashed_messages(category_filter=["login"]) %}
