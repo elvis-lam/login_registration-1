@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Success</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Link to jQuery  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+
+        <!-- jumbotron  -->
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">Success!</h1>
+                <p class="lead"> </p>
+            </div>
+        </div>
+        
+        <!-- headers for each column -->
+        <div class="row">
+            <div class="col">
+                <h3>3 Message(s) for you (Username):</h3>
+            </div>
+            <div class="col">
+                <h3>Send a message:</h3>
+
+                <!-- keep a count of messages sent -->
+                <!-- ------------------------------------------ -->
+                <p>You have sent a total of ___ messages so far</p>
+            </div>
+        </div>
+
+        <!-- MESSAGES RECEIVED  -->
+        <!-- ============================================= -->
+        <div class="row">
+            <div class="col">
+
+                <!-- CARD: MESSAGE  -->
+                <div class="card">
+                    <div class="card-body">
+
+                        <!-- form to read/delete a message -->
+                        <!-- ------------------------------------ -->
+                        <form action="/delete" method="post">
+                            <div class="row">
+                                <div class="col-10">
+                                    <p class="card-text"> DYNAMICALLY ADD MESSAGE HERE</p>
+                                </div>
+                                <div class="col-2">
+                                    <button type="submit" class="btn btn-secondary" id="bttnSubmit">delete</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <br>
+
+            </div>
+
+
+            <!-- SEND MESSAGES  -->
+            <!-- ============================================= -->
+            <div class="col">
+
+
+                <!-- CARD: SEND A MESSAGE -->
+                
+                <div class="card">
+                    <div class="card-body">
+
+                        <!-- form to send a message -->
+                        <!-- ------------------------------------ -->
+                        <form action="/comment" method="post">
+                            <div class="row">
+                                <div class="col-10">
+                                    <p class="card-text"> DYNAMICALLY ADD MESSAGE HERE</p>
+                                </div>
+                                <div class="col-2">
+                                    <button type="submit" class="btn btn-info" id="bttnSubmit">Send</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <br>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- BOOTSTRAP'S: Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>
