@@ -124,19 +124,32 @@ def login():
 # ===========================================================================
 # NEED TO ADD GETTING MESSAGES IN HERE
 
-@app.route('/welcome')
+@app.route('/welcome', methods=['GET'])
 def welcome():
     print('SESSION:', session)
+
+    mysql = connectToMySQL("registrationsdb")
+    # query = "SELECT * FROM registrationsdb.received_messages WHERE user_id = %(user_id)s ORDER BY id DESC LIMIT 5;"
+    # data = { 'user_id': session['user_id'] }
+    # received_messages = mysql.query_db(query, data)
+
+# fix WHERE query to be dynamic
+    received_messages = mysql.query_db("SELECT * FROM registrationsdb.received_messages WHERE user_id= 1 ORDER BY id DESC LIMIT 5;")
+
+    print('RECEIVED_MESSAGES:', received_messages)
+
+
     return render_template('messages.html')
 
 
+    # return render_template('index.html', friends = all_friends)
 # ===========================================================================
 #                       CREATING A MESSAGE
 # ===========================================================================
 
-@app.route('/create_message', methods=['POST'])
-def create_message():
-    mysql = connectToMySQL("registrationsdb")
+# @app.route('/create_message', methods=['POST'])
+# def create_message():
+#     mysql = connectToMySQL("registrationsdb")
     # query = "INSERT INTO friends (first_name, last_name, occupation, created_at, updated_at) VALUES (%(first_name)s, %(last_name)s, %(occupation)s, NOW(), NOW());"
     # data = {
     #          'first_name': request.form['first_name'],
@@ -151,6 +164,9 @@ def create_message():
 # ===========================================================================
 
 
+# @app.route('/delete_message', methods=['POST'])
+# def create_message():
+#     mysql = connectToMySQL("registrationsdb")
 
 
 

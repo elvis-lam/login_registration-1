@@ -26,8 +26,8 @@ CREATE TABLE IF NOT EXISTS `registrationsdb`.`users` (
   `last_name` VARCHAR(255) NULL,
   `email` VARCHAR(45) NULL,
   `password_hash` VARCHAR(255) NULL,
-  `created_at` DATETIME NULL,
-  `updated_at` DATETIME NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -38,8 +38,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `registrationsdb`.`received_messages` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `content` TEXT(200) NULL,
-  `created_at` DATETIME NULL,
-  `updated_at` DATETIME NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `user_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_received_messages_users_idx` (`user_id` ASC) VISIBLE,
@@ -57,8 +57,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `registrationsdb`.`sent_messages` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `content` TEXT(200) NULL,
-  `created_at` DATETIME NULL,
-  `updated_at` DATETIME NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `user_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_sent_messages_users1_idx` (`user_id` ASC) VISIBLE,
