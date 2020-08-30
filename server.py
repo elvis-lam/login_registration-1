@@ -82,7 +82,8 @@ def register():
              "password_hash": pw_hash,
          }
         mysql.query_db(query, data)
-        
+
+# get user_id and store into session
         # session['user_id'] = request.form
         session['user_name'] = request.form['first_name']
         print('SESSION:', session)
@@ -107,7 +108,6 @@ def login():
             # if we get True after checking the password, we may put the user id in session
             session['user_id'] = result[0]['id']
             session['user_name'] = result[0]['first_name']
-            print('SESSION:', session)
 
             # never render on a post, always redirect!
             return redirect('/welcome')
@@ -126,17 +126,34 @@ def login():
 
 @app.route('/welcome', methods=['GET'])
 def welcome():
-    print('SESSION:', session)
+    user_id= session['user_id']
+    print('*****SESSION', session)
+    print('*****USER_ID', user_id)
+
+    # COUNT sent messages 
+    #-------------------------------------------
+    mysql = connectToMySQL("registrationsdb")
+    query = "SELECT COUNT(user_id) FROM registrationsdb.messages WHERE user_id = %(user_id)s;"
+    data = { 'user_id': session['user_id'] }
+    count_sent_messages = mysql.query_db(query, data)
+
+    print('******** COUNT SENT MESSAGES:', count_sent_messages)
+
+    # COUNT received messages 
+    #-------------------------------------------
+    mysql = connectToMySQL("registrationsdb")
+    query = "SELECT COUNT(receiver_id) FROM registrationsdb.messages WHERE receiver_id = %(user_id)s;"
+    data = { 'receiver_id': session['user_id'] }
+    count_received_messages = mysql.query_db(query, data)
+
+    print('******** COUNT RECEIVED MESSAGES:', count_received_messages)
+
+
 
     mysql = connectToMySQL("registrationsdb")
-    # query = "SELECT * FROM registrationsdb.received_messages WHERE user_id = %(user_id)s ORDER BY id DESC LIMIT 5;"
-    # data = { 'user_id': session['user_id'] }
-    # received_messages = mysql.query_db(query, data)
-
-# fix WHERE query user_id to be dynamic
-    received_messages = mysql.query_db("SELECT * FROM registrationsdb.received_messages WHERE user_id= 1 ORDER BY id DESC LIMIT 5;")
-
-    print('RECEIVED_MESSAGES:', received_messages)
+    query = "SELECT * FROM registrationsdb.messages WHERE receiver_id = %(user_id)s ORDER BY id DESC LIMIT 5;"
+    data = { 'receiver_id': session['user_id'] }
+    received_messages = mysql.query_db(query, data)
 
     
     return render_template('messages.html')
@@ -157,14 +174,21 @@ def welcome():
 @app.route('/create_message', methods=['POST'])
 def create_message():
     mysql = connectToMySQL("registrationsdb")
-    query = "INSERT INTO friends (first_name, last_name, occupation, created_at, updated_at) VALUES (%(first_name)s, %(last_name)s, %(occupation)s, NOW(), NOW());"
+    query= "INSERT INTO messages (user_id, receiver_id, content, created_at, updated_at) VALUES (%(user_id)s, %(receiver_id)s, %(content)s, NOW(), NOW());"
     data = {
-             'first_name': request.form['first_name'],
-             'last_name':  request.form['last_name'],
-             'occupation': request.form['occupation']
-           }
-    new_friend_id = mysql.query_db(query, data)
-    return redirect('/')
+        'user_id': session['user_id'],
+#MAKE RECEIVER_ID DYNAMIC
+        'receiver_id': 2,
+        'content': request.form['sendMsg']
+        }
+    mysql.query_db(query, data)
+
+    print('***************CREATED A MESSAGE')
+    return redirect('/welcome')
+
+
+
+
 
 # ===========================================================================
 #                       DELETING A MESSAGE
