@@ -33,9 +33,9 @@ def register():
 
     # name validation
     # --------------------------------------
-    if len(request.form['first-name']) < 2:
+    if len(request.form['first_name']) < 2:
         flash("first name must be at least 2 characters", 'f-name')
-    if len(request.form['last-name']) < 2:
+    if len(request.form['last_name']) < 2:
         flash("last name must be at least 2 characters", 'l-name')
     
     # new-email validation
@@ -76,8 +76,8 @@ def register():
         print("PW HASH:", pw_hash)
         query = "INSERT INTO users (first_name, last_name, email, password_hash, created_at, updated_at) VALUES (%(first_name)s, %(last_name)s, %(email)s, %(password_hash)s, NOW(), NOW());"
         data = {
-             "first_name": request.form['first-name'],
-             "last_name": request.form['last-name'],
+             "first_name": request.form['first_name'],
+             "last_name": request.form['last_name'],
              "email": request.form['new-email'],
              "password_hash": pw_hash,
          }
@@ -133,31 +133,38 @@ def welcome():
     # data = { 'user_id': session['user_id'] }
     # received_messages = mysql.query_db(query, data)
 
-# fix WHERE query to be dynamic
+# fix WHERE query user_id to be dynamic
     received_messages = mysql.query_db("SELECT * FROM registrationsdb.received_messages WHERE user_id= 1 ORDER BY id DESC LIMIT 5;")
 
     print('RECEIVED_MESSAGES:', received_messages)
 
-
+    
     return render_template('messages.html')
 
+# need to use: if received_messages, then return. else don't return the messages
+    # return render_template('messages.html', received_messages = received_messages)
 
-    # return render_template('index.html', friends = all_friends)
+    #messages.html
+    #  {{ received_messages[0].created_at }}
+    #  {{ received_messages[0].content }}
+
+
+
 # ===========================================================================
 #                       CREATING A MESSAGE
 # ===========================================================================
 
-# @app.route('/create_message', methods=['POST'])
-# def create_message():
-#     mysql = connectToMySQL("registrationsdb")
-    # query = "INSERT INTO friends (first_name, last_name, occupation, created_at, updated_at) VALUES (%(first_name)s, %(last_name)s, %(occupation)s, NOW(), NOW());"
-    # data = {
-    #          'first_name': request.form['first_name'],
-    #          'last_name':  request.form['last_name'],
-    #          'occupation': request.form['occupation']
-    #        }
-    # new_friend_id = mysql.query_db(query, data)
-    # return redirect('/')
+@app.route('/create_message', methods=['POST'])
+def create_message():
+    mysql = connectToMySQL("registrationsdb")
+    query = "INSERT INTO friends (first_name, last_name, occupation, created_at, updated_at) VALUES (%(first_name)s, %(last_name)s, %(occupation)s, NOW(), NOW());"
+    data = {
+             'first_name': request.form['first_name'],
+             'last_name':  request.form['last_name'],
+             'occupation': request.form['occupation']
+           }
+    new_friend_id = mysql.query_db(query, data)
+    return redirect('/')
 
 # ===========================================================================
 #                       DELETING A MESSAGE
