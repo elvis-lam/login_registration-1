@@ -76,8 +76,8 @@
                         <!-- form /delete_message route  -->
                         <form action="/delete_message" method="post">
 
-                            <!-- hidden input to know which message to delete -->
-                            <input type="hidden" name="senderId" value='{{ message.user_id }}'>
+                            <!-- hidden input: value = message to delete -->
+                            <input type="hidden" name="messagesId" value='{{ message.id }}'>
                             <div class="card-body">
                                 <p class="card-text timeReceived">
 

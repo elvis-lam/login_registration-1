@@ -140,7 +140,7 @@ def getData():
 
     # data to show "received messages", newest first, 5 max
     mysql = connectToMySQL('registrationsdb')
-    message_query = "SELECT user_id, first_name, content, messages.created_at FROM messages, users WHERE receiver_id = 3 and user_id = users.id ORDER BY messages.id DESC LIMIT 5;"
+    message_query = "SELECT user_id, first_name, content, messages.created_at, messages.id FROM messages, users WHERE (receiver_id = %(user_id)s) and user_id = users.id ORDER BY messages.id DESC LIMIT 5;"
     message_data = {
         'user_id': user_id
     }
@@ -172,30 +172,33 @@ def getData():
 
 @app.route('/create_message', methods=['POST'])
 def create_message():
-
+    
     mysql = connectToMySQL("registrationsdb")
     query= "INSERT INTO messages (user_id, receiver_id, content, created_at, updated_at) VALUES (%(user_id)s, %(receiver_id)s, %(content)s, NOW(), NOW());"
     data = {
         'user_id': session['user_id'],
-#MAKE RECEIVER_ID DYNAMIC
         'receiver_id': request.form['receiverId'],
         'content': request.form['sendMsg']
         }
     mysql.query_db(query, data)
 
-    print('***************CREATED A MESSAGE')
     return redirect('/getData')
 
 # ===========================================================================
 #                       DELETING A MESSAGE
 # ===========================================================================
 
-# @app.route('/delete_message', methods=['POST'])
-# def create_message():
-#     mysql = connectToMySQL("registrationsdb")
+@app.route('/delete_message', methods=['POST'])
+def delete_message():
 
-# according to hidden input value, DELETE 
+    mysql = connectToMySQL("registrationsdb")
+    query = "DELETE FROM messages WHERE (id = %(messagesId)s);"
+    data = {
+        'messagesId': request.form['messagesId']
+    }
+    mysql.query_db(query, data)
 
+    return redirect('/getData')
 
 # # ===========================================================================
 # #         CLEAR OUT SESSION WHEN LOG OUT 
