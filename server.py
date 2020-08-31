@@ -120,33 +120,33 @@ def login():
 
 
 # ===========================================================================
-#                    after registering/logging in
+#            GET DATA: after registering/logging in
 # ===========================================================================
 # NEED TO ADD GETTING MESSAGES IN HERE
 
 @app.route('/getData', methods=['GET'])
 def getData():
-
     user_id= session['user_id']
-
     print('*****SESSION', session)
     print('*****USER_ID', user_id)
- 
+
+    # data of other users for "send a message"
     mysql = connectToMySQL('registrationsdb')
     query = "SELECT id, first_name FROM users WHERE NOT (id = %(user_id)s);"
     data = {
         'user_id': user_id
     }
+    otherUsers = mysql.query_db(query, data)
 
-    # will render names and their id (hidden) to send messages
-    # saved to, otherUsers 
-    all_other_users = mysql.query_db(query, data)
-    print('OTHER USERS:', all_other_users)
-    
-    # return  jsonify(all_clients)
+    # data to show "received messages", newest first, 5 max
+    mysql = connectToMySQL('registrationsdb')
+    message_query = "SELECT user_id, first_name, content, messages.created_at FROM messages, users WHERE receiver_id = 3 and user_id = users.id ORDER BY messages.id DESC LIMIT 5;"
+    message_data = {
+        'user_id': user_id
+    }
+    receivedMessages = mysql.query_db(message_query, message_data)
 
-    
-   
+    return render_template('messages.html', otherUsers = otherUsers, receivedMessages = receivedMessages)
 
     # # COUNT sent messages 
     # # -------------------------------------------
@@ -165,27 +165,6 @@ def getData():
     # data = { 'receiver_id': session['user_id'] }
     # count_received_messages = mysql.query_db(query, data)
 
-    # print('******** COUNT RECEIVED MESSAGES:', count_received_messages)
-
-    # # DISPLAY RECENT 5 RECEIVED MESSAGES
-    # # -------------------------------------------
-    # mysql = connectToMySQL("registrationsdb")
-    # query = "SELECT * FROM registrationsdb.messages WHERE receiver_id = %(user_id)s ORDER BY id DESC LIMIT 2;"
-    # data = { 'receiver_id': session['user_id'] }
-    # received_messages = mysql.query_db(query, data)
-
-    # return render_template('messages.html', count_sent_messages = count_sent_messages, count_received_messages = count_received_messages, received_messages = received_messages )
-
-    return render_template('messages.html', otherUsers = all_other_users)
-
-# need to use: if received_messages, then return. else don't return the messages
-    # return render_template('messages.html', received_messages = received_messages)
-
-    #messages.html
-    #  {{ received_messages[0].created_at }}
-    #  {{ received_messages[0].content }}
-
-
 
 # ===========================================================================
 #                       CREATING A MESSAGE
@@ -193,33 +172,29 @@ def getData():
 
 @app.route('/create_message', methods=['POST'])
 def create_message():
+
     mysql = connectToMySQL("registrationsdb")
     query= "INSERT INTO messages (user_id, receiver_id, content, created_at, updated_at) VALUES (%(user_id)s, %(receiver_id)s, %(content)s, NOW(), NOW());"
     data = {
         'user_id': session['user_id'],
 #MAKE RECEIVER_ID DYNAMIC
-        'receiver_id': 2,
+        'receiver_id': request.form['receiverId'],
         'content': request.form['sendMsg']
         }
     mysql.query_db(query, data)
 
     print('***************CREATED A MESSAGE')
-    return redirect('/welcome')
-
-
-
-
+    return redirect('/getData')
 
 # ===========================================================================
 #                       DELETING A MESSAGE
 # ===========================================================================
 
-
 # @app.route('/delete_message', methods=['POST'])
 # def create_message():
 #     mysql = connectToMySQL("registrationsdb")
 
-
+# according to hidden input value, DELETE 
 
 
 # # ===========================================================================

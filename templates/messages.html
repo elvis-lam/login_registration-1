@@ -16,14 +16,12 @@
         #navbar {
             margin: 10px 0 20px;
         }
-
         #welcome {
             color: black;
             /* font-family: "Lucida Console", 'Courier New', Courier, monospace; */
             font-size: 2rem;
             font-family: Optima, IrisUPC, sans-serif;
         }
-
         .contentReceived {
             text-align: center;
         }
@@ -61,10 +59,6 @@
                 <!-- ------------------------------------------ -->
                 <p>You have sent a total of ___ messages so far</p>
 
-                {{ session['count_sent'] }}
-
-
-
             </div>
         </div>
 
@@ -72,21 +66,27 @@
             <!-- RECEIVED MESSAGES COLUMN  -->
             <!-- ============================================= -->
             <div class="col">
-
-
-                <!-- card: first message  -->
+                
+                <!-- CARD: RECEIVED MESSAGES (for loop) -->
                 <!-- ============================================= -->
+                {% for message in receivedMessages: %}
                 <div class="row">
                     <div class="card col-9">
 
                         <!-- form /delete_message route  -->
                         <form action="/delete_message" method="post">
+
+                            <!-- hidden input to know which message to delete -->
+                            <input type="hidden" name="senderId" value='{{ message.user_id }}'>
                             <div class="card-body">
                                 <p class="card-text timeReceived">
 
+
+                                    <!-- ****************FORMAT TIME TO SHOW TIME DIFFERENCE  -->
+                                    {{ message.created_at }}  FROM  {{ message.first_name }}
                                 </p>
                                 <p class="card-text contentReceived">
-
+                                    {{ message.content }}
                                 </p>
                             </div>
                     </div>
@@ -96,8 +96,7 @@
                     </div>
                 </div>
                 <br>
-
-
+                {% endfor %}
 
             </div>
 
@@ -106,10 +105,8 @@
             <!-- ============================================= -->
             <div class="col">
 
-
-                <!-- CARD: SEND MESSAGE -->
+                <!-- CARD: SEND MESSAGE (for loop) -->
                 <!-- ============================================= -->
-
                 {% for user in otherUsers: %}
                 <div>
                     <form action="/create_message" method="post">
@@ -121,6 +118,7 @@
                             <div class="col-9">
                                 <!-- CONTENT data for message table  -->
                                 <textarea id="sendMsg" name="sendMsg" rows="3" cols="30"></textarea>
+                                <input type="hidden" name="receiverId" value ='{{ user.id }}'>
                             </div>
                             <div class="col-1">
                                 <button value='{{ user.id }}' name="sendBttn" type="submit"
@@ -130,7 +128,6 @@
                     <br>
                 </div>
                 {% endfor %}
-
 
             </div>
         </div>
