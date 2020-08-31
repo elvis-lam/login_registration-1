@@ -1,0 +1,36 @@
+fonts
+font-family: 'Concert One', cursive;
+font-family: 'Viga', sans-serif;
+font-family: 'Architects Daughter', cursive;
+font-family: 'Patrick Hand', cursive;
+
+/* flash messages */
+.error {
+     color: red;
+}
+
+
+#navbar {
+     margin: 10px 0 20px;
+     background-color: #0d5f8a;
+     font-family: 'Viga', sans-serif;
+}
+
+#headers {
+    font-family: 'Concert One', cursive;
+}
+
+/* messages.html --messages received */
+#timeReceived {
+    font-family: 'Architects Daughter', cursive;
+
+}
+#contentReceived {
+    font-family: 'Architects Daughter', cursive;
+    text-align: center;
+}
+
+#sendMsg {
+    width: 100%;
+    font-family: 'Patrick Hand', cursive;
+}
