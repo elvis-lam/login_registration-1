@@ -19,7 +19,6 @@
 
         #welcome {
             color: black;
-            /* font-family: "Lucida Console", 'Courier New', Courier, monospace; */
             font-size: 2rem;
             font-family: Optima, IrisUPC, sans-serif;
         }
@@ -32,8 +31,7 @@
 
 <body>
 
-    <!-- NAV  -->
-    <!-- ============================================= -->
+    <!-- ================= NAV ======================== -->
     <nav id="navbar" class="navbar navbar-dark" style="background-color: #e3f2fd;">
         <div>
             <!--empty div to center span text-->
@@ -42,8 +40,7 @@
             Welcome {{ session['user_name'] }}
         </span>
 
-        <!-- LOGOUT BUTTON / LOGOUT USER / logout route  -->
-        <!-- ------------------------------------------ -->
+        <!-- =================== LOGOUT ROUTE ===================== -->
         <form action="/logout" method="post" class="form-inline justify-content-end">
             <button class="btn" type="submit">log out</button>
         </form>
@@ -51,8 +48,7 @@
 
     <div class="container">
 
-        <!-- COLUMN HEADERS -->
-        <!-- ============================================= -->
+        <!-- ================ COL HEADERS(2) =================== -->
         <div class="row" id="headers">
             <div class="col">
                 <h4>( ) Message(s) for you ({{ session['user_name'] }}):</h4>
@@ -68,12 +64,10 @@
         </div>
 
         <div class="row">
-            <!-- RECEIVED MESSAGES COLUMN  -->
-            <!-- ============================================= -->
+            <!-- ==================== RECEIVED MESSAGES COLUMN =================== -->
             <div class="col">
 
-                <!-- CARD: RECEIVED MESSAGES (for loop) -->
-                <!-- ============================================= -->
+                <!-- ========= CARD: RECEIVED MESSAGE (for loop) ============= -->
                 {% for message in receivedMessages: %}
                 <div class="row">
                     <div class="card col-9">
@@ -88,7 +82,7 @@
 
 
                                     <!-- ****************FORMAT TIME TO SHOW TIME DIFFERENCE  -->
-                                    {{ message.created_at }} FROM {{ message.first_name }}
+                                    RECEIVED AT : {{ message.created_at }} FROM : {{ message.first_name }}
                                 </p>
                                 <p class="card-text contentReceived">
                                     {{ message.content }}
@@ -105,13 +99,10 @@
 
             </div>
 
-
-            <!-- SENT MESSAGES COLUMN -->
-            <!-- ============================================= -->
+            <!-- ===================== SENT MESSAGES COLUMN ======================== -->
             <div class="col">
 
-                <!-- CARD: SEND MESSAGE (for loop) -->
-                <!-- ============================================= -->
+                <!-- ========= CARD: SEND MESSAGE (for loop) ============= -->
                 {% for user in otherUsers: %}
                 <div>
                     <form action="/create_message" method="post">

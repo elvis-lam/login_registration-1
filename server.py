@@ -3,10 +3,9 @@ from flask_bcrypt import Bcrypt
 from mysqlconnection import connectToMySQL
 from datetime import datetime
 
-# the "re" module will let us perform some regular expression operations
-import re
+import re   # "re"regular expression operations
 import pymysql
-import pymysql.cursors #makes data sent in the form of python dictionaries
+import pymysql.cursors #makes data sent as python dictionaries
 
 mysql = connectToMySQL('registrationsdb')
 
@@ -17,17 +16,17 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)  
 app.secret_key = "ThisIsSecret!"
 
-# ===========================================================================
-#                               INDEX ROUTE
-# ===========================================================================
+# ==============================================================
+#                     INDEX ROUTE
+# ==============================================================
 @app.route('/')
 def index():
     mysql = connectToMySQL('registrationsdb')
     return render_template('index.html')
 
-# ===========================================================================
-#                           REGISTER BUTTON ROUTE
-# ===========================================================================
+# ==============================================================
+#                  REGISTER BUTTON ROUTE
+# ==============================================================
 @app.route('/register', methods=['POST'])
 def register():
 
@@ -68,12 +67,12 @@ def register():
     if '_flashes' in session.keys():
         return redirect("/")
 
-    # ADD NEW USER TO DATABASE
+    # ADD NEW USER TO DATABASE : hash password
     # --------------------------------------
     else:
         mysql = connectToMySQL('registrationsdb')
         pw_hash = bcrypt.generate_password_hash(request.form['new-password']) 
-        print("PW HASH:", pw_hash)
+
         query = "INSERT INTO users (first_name, last_name, email, password_hash, created_at, updated_at) VALUES (%(first_name)s, %(last_name)s, %(email)s, %(password_hash)s, NOW(), NOW());"
         data = {
              "first_name": request.form['first_name'],
@@ -81,18 +80,19 @@ def register():
              "email": request.form['new-email'],
              "password_hash": pw_hash,
          }
-        mysql.query_db(query, data)
+        new_user_id=mysql.query_db(query, data)
 
-# get user_id and store into session
-        # session['user_id'] = request.form
+        # get user_id and store into session
+        session['user_id'] = new_user_id
         session['user_name'] = request.form['first_name']
         print('SESSION:', session)
+
         return redirect('/getData')
     
 
-# ===========================================================================
-#                              LOGIN BUTTON ROUTE
-# ===========================================================================
+# ========================================================
+#                  LOGIN BUTTON ROUTE
+# ========================================================
 @app.route('/login', methods=['POST'])
 def login():
     
@@ -105,11 +105,10 @@ def login():
     if result:
         if bcrypt.check_password_hash(result[0]['password_hash'], request.form['password']):
             
-            # if we get True after checking the password, we may put the user id in session
+            # if True: store some user data in session
             session['user_id'] = result[0]['id']
             session['user_name'] = result[0]['first_name']
 
-            # never render on a post, always redirect!
             return redirect('/getData')
     
     # if username & password don't match
@@ -119,10 +118,9 @@ def login():
         return redirect("/")
 
 
-# ===========================================================================
+# =======================================================
 #            GET DATA: after registering/logging in
-# ===========================================================================
-# NEED TO ADD GETTING MESSAGES IN HERE
+# =======================================================
 
 @app.route('/getData', methods=['GET'])
 def getData():
@@ -146,7 +144,20 @@ def getData():
     }
     receivedMessages = mysql.query_db(message_query, message_data)
 
+    #if the user has messages sent to them: CALCULATE THE DIFFERENCE BETWEEN THEN AND NOW FROM THE ABOVE QUERY RESULTS
+    # if receivedMessages:
+
+        
+# SELECT TIMEDIFF(NOW(), messages.created_at) FROM messages WHERE id = 13;
+
+
+
+
+    #SEND ALL OF THIS DATA TO BE MANIPULATED ON HTML
     return render_template('messages.html', otherUsers = otherUsers, receivedMessages = receivedMessages)
+
+
+    
 
     # # COUNT sent messages 
     # # -------------------------------------------
@@ -166,9 +177,9 @@ def getData():
     # count_received_messages = mysql.query_db(query, data)
 
 
-# ===========================================================================
-#                       CREATING A MESSAGE
-# ===========================================================================
+# =====================================================
+#                 CREATE A MESSAGE
+# =====================================================
 
 @app.route('/create_message', methods=['POST'])
 def create_message():
@@ -184,9 +195,9 @@ def create_message():
 
     return redirect('/getData')
 
-# ===========================================================================
-#                       DELETING A MESSAGE
-# ===========================================================================
+# =====================================================
+#                 DELETE A MESSAGE
+# =====================================================
 
 @app.route('/delete_message', methods=['POST'])
 def delete_message():
@@ -200,9 +211,9 @@ def delete_message():
 
     return redirect('/getData')
 
-# ===========================================================================
+# ====================================================
 #        LOG OUT: clear session
-# ===========================================================================
+# ====================================================
 @app.route('/logout', methods=['POST'])
 def logout():
     return redirect('/clear_session')
@@ -213,9 +224,9 @@ def clear_session():
     return redirect('/')
 
 
-# ===========================================================================
-#         START SERVER
-# ===========================================================================
+# =======================================================
+#         START SERVER **********
+# =======================================================
 if __name__ == "__main__":
     app.run(debug=True)
 
