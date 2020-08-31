@@ -87,7 +87,7 @@ def register():
         # session['user_id'] = request.form
         session['user_name'] = request.form['first_name']
         print('SESSION:', session)
-        return redirect('/welcome')
+        return redirect('/getData')
     
 
 # ===========================================================================
@@ -110,7 +110,7 @@ def login():
             session['user_name'] = result[0]['first_name']
 
             # never render on a post, always redirect!
-            return redirect('/welcome')
+            return redirect('/getData')
     
     # if username & password don't match
     # --------------------------------------
@@ -124,39 +124,59 @@ def login():
 # ===========================================================================
 # NEED TO ADD GETTING MESSAGES IN HERE
 
-@app.route('/welcome', methods=['GET'])
-def welcome():
+@app.route('/getData', methods=['GET'])
+def getData():
+
     user_id= session['user_id']
+
     print('*****SESSION', session)
     print('*****USER_ID', user_id)
+ 
+    mysql = connectToMySQL('registrationsdb')
+    query = "SELECT id, first_name FROM users WHERE NOT (id = %(user_id)s);"
+    data = {
+        'user_id': user_id
+    }
 
-    # COUNT sent messages 
-    #-------------------------------------------
-    mysql = connectToMySQL("registrationsdb")
-    query = "SELECT COUNT(user_id) FROM registrationsdb.messages WHERE user_id = %(user_id)s;"
-    data = { 'user_id': session['user_id'] }
-    count_sent_messages = mysql.query_db(query, data)
-
-    print('******** COUNT SENT MESSAGES:', count_sent_messages)
-
-    # COUNT received messages 
-    #-------------------------------------------
-    mysql = connectToMySQL("registrationsdb")
-    query = "SELECT COUNT(receiver_id) FROM registrationsdb.messages WHERE receiver_id = %(user_id)s;"
-    data = { 'receiver_id': session['user_id'] }
-    count_received_messages = mysql.query_db(query, data)
-
-    print('******** COUNT RECEIVED MESSAGES:', count_received_messages)
-
-
-
-    mysql = connectToMySQL("registrationsdb")
-    query = "SELECT * FROM registrationsdb.messages WHERE receiver_id = %(user_id)s ORDER BY id DESC LIMIT 5;"
-    data = { 'receiver_id': session['user_id'] }
-    received_messages = mysql.query_db(query, data)
+    # will render names and their id (hidden) to send messages
+    # saved to, otherUsers 
+    all_other_users = mysql.query_db(query, data)
+    print('OTHER USERS:', all_other_users)
+    
+    # return  jsonify(all_clients)
 
     
-    return render_template('messages.html')
+   
+
+    # # COUNT sent messages 
+    # # -------------------------------------------
+    # mysql = connectToMySQL("registrationsdb")
+    # query = "SELECT COUNT(user_id) FROM registrationsdb.messages WHERE user_id = %(user_id)s;"
+    # data = { 'user_id': session['user_id'] }
+    # count_sent_messages = mysql.query_db(query, data)
+
+    # session['count_sent'] = count_sent_messages
+    # print('******** COUNT SENT MESSAGES:', count_sent_messages)
+
+    # # COUNT received messages 
+    # # -------------------------------------------
+    # mysql = connectToMySQL("registrationsdb")
+    # query = "SELECT COUNT(receiver_id) FROM registrationsdb.messages WHERE receiver_id = %(user_id)s;"
+    # data = { 'receiver_id': session['user_id'] }
+    # count_received_messages = mysql.query_db(query, data)
+
+    # print('******** COUNT RECEIVED MESSAGES:', count_received_messages)
+
+    # # DISPLAY RECENT 5 RECEIVED MESSAGES
+    # # -------------------------------------------
+    # mysql = connectToMySQL("registrationsdb")
+    # query = "SELECT * FROM registrationsdb.messages WHERE receiver_id = %(user_id)s ORDER BY id DESC LIMIT 2;"
+    # data = { 'receiver_id': session['user_id'] }
+    # received_messages = mysql.query_db(query, data)
+
+    # return render_template('messages.html', count_sent_messages = count_sent_messages, count_received_messages = count_received_messages, received_messages = received_messages )
+
+    return render_template('messages.html', otherUsers = all_other_users)
 
 # need to use: if received_messages, then return. else don't return the messages
     # return render_template('messages.html', received_messages = received_messages)

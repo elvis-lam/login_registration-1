@@ -13,10 +13,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <style>
-        /* body {
-            background-color: gold;
-        } */
-
         #navbar {
             margin: 10px 0 20px;
         }
@@ -27,10 +23,6 @@
             font-size: 2rem;
             font-family: Optima, IrisUPC, sans-serif;
         }
-
-        /* #headers{
-            background-color: #e3f2fd;
-        } */
 
         .contentReceived {
             text-align: center;
@@ -60,7 +52,7 @@
         <!-- ============================================= -->
         <div class="row" id="headers">
             <div class="col">
-                <h4>() Message(s) for you ({{ session['user_name'] }}):</h4>
+                <h4>( ) Message(s) for you ({{ session['user_name'] }}):</h4>
             </div>
             <div class="col">
                 <h4>Send a message:</h4>
@@ -68,6 +60,11 @@
                 <!-- keep a count of messages sent -->
                 <!-- ------------------------------------------ -->
                 <p>You have sent a total of ___ messages so far</p>
+
+                {{ session['count_sent'] }}
+
+
+
             </div>
         </div>
 
@@ -86,10 +83,10 @@
                         <form action="/delete_message" method="post">
                             <div class="card-body">
                                 <p class="card-text timeReceived">
-                                
+
                                 </p>
                                 <p class="card-text contentReceived">
-                            
+
                                 </p>
                             </div>
                     </div>
@@ -100,28 +97,7 @@
                 </div>
                 <br>
 
-                <!-- card: 2nd message  -->
-                <!-- ============================================= -->
-                <div class="row">
-                    <div class="card col-9">
 
-                        <!-- form /delete_message route  -->
-                        <form action="/delete_message" method="post">
-                            <div class="card-body">
-                                <p class="card-text timeReceived">
-                 
-                                </p>
-                                <p class="card-text contentReceived">
-                               
-                                </p>
-                            </div>
-                    </div>
-                    <div class="col-2">
-                        <button name="deleteBttn" type="submit" class="btn btn-secondary">Delete</button>
-                        </form>
-                    </div>
-                </div>
-                <br>
 
             </div>
 
@@ -130,32 +106,34 @@
             <!-- ============================================= -->
             <div class="col">
 
-                <!-- CARD: send one MESSAGE -->
+
+                <!-- CARD: SEND MESSAGE -->
                 <!-- ============================================= -->
-                <form action="/create_message" method="post">
-                    <div class="row">
-                        <div class="col-2">
 
-                            <!-- make the name dynamic  -->
-                            <label for="sendMsg"> name </label>
-                        </div>
-                        <div class="col-9">
-
-
-                            <!-- USER'S CONTENT FOR MESSAGE  -->
-                            <textarea id="sendMsg" name="sendMsg" rows="3" cols="30"></textarea>
-                        </div>
-                        <div class="col-1">
-                            <button name="sendBttn" type="submit" class="btn btn-secondary">Send</button>
-                        </div>
-                </form>
-                <br>
-
+                {% for user in otherUsers: %}
+                <div>
+                    <form action="/create_message" method="post">
+                        <div class="row">
+                            <div class="col-2">
+                                <!-- dynamic labels for other users' name  -->
+                                <label for="sendMsg"> {{ user.first_name }} </label>
+                            </div>
+                            <div class="col-9">
+                                <!-- CONTENT data for message table  -->
+                                <textarea id="sendMsg" name="sendMsg" rows="3" cols="30"></textarea>
+                            </div>
+                            <div class="col-1">
+                                <button value='{{ user.id }}' name="sendBttn" type="submit"
+                                    class="btn btn-secondary">Send</button>
+                            </div>
+                    </form>
+                    <br>
+                </div>
+                {% endfor %}
 
 
             </div>
         </div>
-    </div>
     </div>
 
     <!-- BOOTSTRAP'S: Optional JavaScript -->
