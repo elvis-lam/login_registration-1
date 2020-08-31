@@ -16,12 +16,14 @@
         #navbar {
             margin: 10px 0 20px;
         }
+
         #welcome {
             color: black;
             /* font-family: "Lucida Console", 'Courier New', Courier, monospace; */
             font-size: 2rem;
             font-family: Optima, IrisUPC, sans-serif;
         }
+
         .contentReceived {
             text-align: center;
         }
@@ -39,8 +41,11 @@
         <span id="welcome" class="navbar-text justify-content-center">
             Welcome {{ session['user_name'] }}
         </span>
-        <form class="form-inline justify-content-end">
-            <button class="btn" type="button">log out</button>
+
+        <!-- LOGOUT BUTTON / LOGOUT USER / logout route  -->
+        <!-- ------------------------------------------ -->
+        <form action="/logout" method="post" class="form-inline justify-content-end">
+            <button class="btn" type="submit">log out</button>
         </form>
     </nav>
 
@@ -66,7 +71,7 @@
             <!-- RECEIVED MESSAGES COLUMN  -->
             <!-- ============================================= -->
             <div class="col">
-                
+
                 <!-- CARD: RECEIVED MESSAGES (for loop) -->
                 <!-- ============================================= -->
                 {% for message in receivedMessages: %}
@@ -83,7 +88,7 @@
 
 
                                     <!-- ****************FORMAT TIME TO SHOW TIME DIFFERENCE  -->
-                                    {{ message.created_at }}  FROM  {{ message.first_name }}
+                                    {{ message.created_at }} FROM {{ message.first_name }}
                                 </p>
                                 <p class="card-text contentReceived">
                                     {{ message.content }}
@@ -118,7 +123,7 @@
                             <div class="col-9">
                                 <!-- CONTENT data for message table  -->
                                 <textarea id="sendMsg" name="sendMsg" rows="3" cols="30"></textarea>
-                                <input type="hidden" name="receiverId" value ='{{ user.id }}'>
+                                <input type="hidden" name="receiverId" value='{{ user.id }}'>
                             </div>
                             <div class="col-1">
                                 <button value='{{ user.id }}' name="sendBttn" type="submit"

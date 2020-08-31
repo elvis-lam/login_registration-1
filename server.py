@@ -200,17 +200,17 @@ def delete_message():
 
     return redirect('/getData')
 
-# # ===========================================================================
-# #         CLEAR OUT SESSION WHEN LOG OUT 
-# # ===========================================================================
-# @app.route('/reset', methods=['POST'])
-# def resetButton():
-#     return redirect('/destroy_session')
-# # =======================================
-# @app.route('/destroy_session')
-# def destroySession():
-#     session.clear()
-#     return redirect('/')
+# ===========================================================================
+#        LOG OUT: clear session
+# ===========================================================================
+@app.route('/logout', methods=['POST'])
+def logout():
+    return redirect('/clear_session')
+# ----------------------------------------
+@app.route('/clear_session')
+def clear_session():
+    session.clear()
+    return redirect('/')
 
 
 # ===========================================================================

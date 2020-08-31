@@ -24,6 +24,9 @@
 -Connecting to the database to check email existence
 -Using Bcrypt to hash passwords for user safety
 
+-Using database to dynamically create/read/update/delete http responses
+-Less database interaction by using SQL queries that are specific yet also reducing repitition
+
 =============================================================
 
 
@@ -32,9 +35,6 @@
 <!-- Javascript code put into MySQL Workbench:
 ![initial load](/README/screenshot_1.jpg) -->
 --------------------------------------------------------------
-
-<!-- ![this is the text that would show if image doesn't work](link to the image) -->
-
 
 
 --------------------------------------------------------------
