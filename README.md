@@ -32,12 +32,13 @@
 
  ### Screenshots of the app's functions:
 
-<!-- Javascript code put into MySQL Workbench:
-![initial load](/README/screenshot_1.jpg) -->
 --------------------------------------------------------------
 
+Database with empty users table & messages table:
+![initial tables](/static/usersTable1.jpg)
 
 --------------------------------------------------------------
+
 
 --------------------------------------------------------------
 
