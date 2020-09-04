@@ -150,18 +150,19 @@ def admin():
 # =======================================================
 @app.route('/deleteUser', methods=['POST'])
 def deleteUser():
-    user_id = session['user_id']
-    deleteID = request.form['deleteID']
-    print('----USER ID ----', deleteID)
 
-    # mysql = connectToMySQL('registrationsdb')
-    # query = "DELETE FROM users WHERE (id = ' %(user.id)s ');"
-    # data = {
-    #     'user_id': user_id
-    # }
-    # result = mysql.query_db(query, data)
-    # print('----RESULT------', result)
+    # getting id from hidden input
+    print(request.form['deleteID'])
 
+    mysql = connectToMySQL('registrationsdb')
+    query = "DELETE FROM users WHERE (id = %(deleteID)s);"
+
+    print("QUERY", query)
+    data = {
+        'deleteID': request.form['deleteID']
+    }
+    result = mysql.query_db(query, data)
+    print("RESULT", result)
 
     return redirect('/admin')
 
