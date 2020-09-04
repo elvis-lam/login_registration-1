@@ -28,6 +28,10 @@ body {
      font-family: "Viga", sans-serif;
 }
 
+#logoutBttn, #userName {
+     color: white;
+}
+
 #headers {
      font-family: "Concert One", cursive;
 }
