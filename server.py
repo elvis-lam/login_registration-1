@@ -73,7 +73,7 @@ def register():
         mysql = connectToMySQL('registrationsdb')
         pw_hash = bcrypt.generate_password_hash(request.form['new-password']) 
 
-        query = "INSERT INTO users (first_name, last_name, email, password_hash, created_at, updated_at) VALUES (%(first_name)s, %(last_name)s, %(email)s, %(password_hash)s, NOW(), NOW());"
+        query = "INSERT INTO users (first_name, last_name, email, password_hash, user_level, created_at, updated_at) VALUES (%(first_name)s, %(last_name)s, %(email)s, %(password_hash)s, '1', NOW(), NOW());"
         data = {
              "first_name": request.form['first_name'],
              "last_name": request.form['last_name'],
@@ -118,13 +118,12 @@ def login():
             
             else: 
                 return redirect('/user')
-
     
-    # if username & password don't match
-    # --------------------------------------
-    else:
-        flash("You could not be logged in", 'login')
-        return redirect("/")
+        # if username & password don't match
+        # --------------------------------------
+        else:
+            flash("You could not be logged in", 'login')
+            return redirect("/")
 
 
 # =======================================================
@@ -144,6 +143,27 @@ def admin():
     users = mysql.query_db(query, data)
 
     return render_template('admin.html', users = users)
+
+
+# =======================================================
+#                   DELETE USER:
+# =======================================================
+@app.route('/deleteUser', methods=['POST'])
+def deleteUser():
+    user_id = session['user_id']
+    deleteID = request.form['deleteID']
+    print('----USER ID ----', deleteID)
+
+    # mysql = connectToMySQL('registrationsdb')
+    # query = "DELETE FROM users WHERE (id = ' %(user.id)s ');"
+    # data = {
+    #     'user_id': user_id
+    # }
+    # result = mysql.query_db(query, data)
+    # print('----RESULT------', result)
+
+
+    return redirect('/admin')
 
 
 # =======================================================

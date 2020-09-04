@@ -47,8 +47,8 @@ CREATE TABLE IF NOT EXISTS `registrationsdb`.`messages` (
   CONSTRAINT `fk_messages_users`
     FOREIGN KEY (`user_id`)
     REFERENCES `registrationsdb`.`users` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 

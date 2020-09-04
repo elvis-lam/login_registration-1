@@ -64,6 +64,7 @@
                     </thead>
                     <tbody>
 
+
                         <!-- ==================== FOR LOOP to build table data =================== -->
                         {% for user in users: %}
 
@@ -73,20 +74,27 @@
                             <td>{{ user.first_name }} {{ user.last_name }}</td>
                             <td>{{ user.email }}</td>
                             <td>{{ user.user_level }}</td>
-                            <td>
 
+                            <td>
                                 <!-- ==================== /deleteUser ROUTE =================== -->
                                 <!-- Remove/Delete User Button -->
                                 <form action="/deleteUser" method="POST">
-                                    <button type="button" class="btn btn-outline-danger">Remove</button>
-                                </form>
 
+                                    <!-- use this hidden id to know which user in users table to delete  -->
+                                    <input type="hidden" name="deleteID" value="{{ user.id }}">
+                                    <button type="submit" class="btn btn-outline-danger">Remove</button>
+                                </form>
 
                                 <!-- ==================== /adminAccess ROUTE =================== -->
                                 <!-- Add/Remove Admin Access Button (depending on user status) -->
                                 <form action="/adminAccess" method="POST">
-                                    <button type="button" class="btn btn-outline-danger">Remove Admin Access</button>
-                                    <button type="button" class="btn btn-outline-success">Make Admin</button>
+
+                                    <!-- use the value to make appropriate changes in users table in database  -->
+                                    <input type="hidden" name="deleteID" value="{{ user .id }}">
+
+                                    <button type="submit" class="btn btn-outline-success">Make Admin</button>
+                                    <button type="submit" class="btn btn-outline-danger">Remove Admin Access</button>
+
                                 </form>
                             </td>
                         </tr>
@@ -97,14 +105,11 @@
 
 
             </div>
-
         </div>
-
     </div>
 
     <!-- BOOTSTRAP'S: Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
