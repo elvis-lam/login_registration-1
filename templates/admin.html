@@ -32,6 +32,12 @@
         </span>
         <span class="navbar-text">Welcome To The Admin Page!</span>
 
+        <!-- ============== go to messages.html ROUTE =============== -->
+        <form action="/getData" method="GET" class="form-inline justify-content-end">
+            <button class="btn" type="submit">Your Messages!</button>
+        </form>
+
+
         <!-- =================== LOGOUT ROUTE ===================== -->
         <form action="/logout" method="post" class="form-inline justify-content-end">
             <button class="btn" type="submit">log out</button>
@@ -61,7 +67,8 @@
                         <!-- ==================== FOR LOOP to build table data =================== -->
                         {% for user in users: %}
 
-                        <tr id="{{ user.id }}">     <!-- use this id to delete user -->
+                        <tr id="{{ user.id }}">
+                            <!-- use this id to delete user -->
                             <td>{{ user.id }}</td>
                             <td>{{ user.first_name }} {{ user.last_name }}</td>
                             <td>{{ user.email }}</td>
@@ -90,18 +97,6 @@
 
 
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
 
         </div>
 

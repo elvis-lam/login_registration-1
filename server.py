@@ -108,8 +108,19 @@ def login():
             # if True: store some user data in session
             session['user_id'] = result[0]['id']
             session['user_name'] = result[0]['first_name']
+            session['user_level'] = result[0]['user_level']
 
-            return redirect('/getData')
+            print("**************USER LEVEL", session['user_level'])
+
+            if session['user_level'] == '9':
+                return redirect('/admin')
+            
+            else: 
+                return redirect('/user')
+
+
+
+            # return redirect('/getData')
     
     # if username & password don't match
     # --------------------------------------
@@ -119,16 +130,34 @@ def login():
 
 
 # =======================================================
+#                   IF ADMIN:
+# =======================================================
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
+
+
+# =======================================================
+#                   IF USER:
+# =======================================================
+@app.route('/user')
+def user():
+    return render_template('user.html')
+
+
+# =======================================================
 #            GET DATA: after registering/logging in
 # =======================================================
 
 @app.route('/getData', methods=['GET'])
 def getData():
-    user_id= session['user_id']
+    user_id = session['user_id']
+    user_level = session['user_level']
     print('*****SESSION', session)
     print('*****USER_ID', user_id)
 
     # data of other users for "send a message"
+    # -------------------------------------------
     mysql = connectToMySQL('registrationsdb')
     query = "SELECT id, first_name FROM users WHERE NOT (id = %(user_id)s);"
     data = {
@@ -137,6 +166,7 @@ def getData():
     otherUsers = mysql.query_db(query, data)
 
     # data to show "received messages", newest first, 5 max
+    # -------------------------------------------
     mysql = connectToMySQL('registrationsdb')
     message_query = "SELECT user_id, first_name, content, messages.created_at, messages.id FROM messages, users WHERE (receiver_id = %(user_id)s) and user_id = users.id ORDER BY messages.id DESC LIMIT 5;"
     message_data = {
@@ -144,10 +174,6 @@ def getData():
     }
     receivedMessages = mysql.query_db(message_query, message_data)
 
-    #if the user has messages sent to them: CALCULATE THE DIFFERENCE BETWEEN THEN AND NOW FROM THE ABOVE QUERY RESULTS
-    # if receivedMessages:
-        
-# SELECT TIMEDIFF(NOW(), messages.created_at) FROM messages WHERE id = 13;
 
     # COUNT sent messages 
     # -------------------------------------------
@@ -169,23 +195,14 @@ def getData():
     count_received = count_received_messages[0]['COUNT(receiver_id)']
     print('******** COUNT RECEIVED MESSAGES:', count_received)
 
-    
+    # SEND ALL OF THIS DATA FOR HTML RESPONSE
 
 
     #SEND ALL OF THIS DATA TO BE MANIPULATED ON HTML
     return render_template('messages.html', otherUsers = otherUsers, receivedMessages = receivedMessages, count_sent = count_sent, count_received = count_received)
 
 
-    
 
-
-
-    # # COUNT received messages 
-    # # -------------------------------------------
-    # mysql = connectToMySQL("registrationsdb")
-    # query = "SELECT COUNT(receiver_id) FROM registrationsdb.messages WHERE receiver_id = %(user_id)s;"
-    # data = { 'receiver_id': session['user_id'] }
-    # count_received_messages = mysql.query_db(query, data)
 
 
 # =====================================================
