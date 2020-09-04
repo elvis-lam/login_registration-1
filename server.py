@@ -112,15 +112,13 @@ def login():
 
             print("**************USER LEVEL", session['user_level'])
 
+            # based on user_level, redirect to admin or user
             if session['user_level'] == '9':
                 return redirect('/admin')
             
             else: 
                 return redirect('/user')
 
-
-
-            # return redirect('/getData')
     
     # if username & password don't match
     # --------------------------------------
@@ -134,7 +132,18 @@ def login():
 # =======================================================
 @app.route('/admin')
 def admin():
-    return render_template('admin.html')
+    user_id = session['user_id']
+
+    # data: users 
+    # -------------------------------------------
+    mysql = connectToMySQL('registrationsdb')
+    query = "SELECT id, first_name, last_name, email, user_level FROM users WHERE NOT (id = %(user_id)s);"
+    data = {
+        'user_id': user_id
+    }
+    users = mysql.query_db(query, data)
+
+    return render_template('admin.html', users = users)
 
 
 # =======================================================
@@ -148,7 +157,6 @@ def user():
 # =======================================================
 #            GET DATA: after registering/logging in
 # =======================================================
-
 @app.route('/getData', methods=['GET'])
 def getData():
     user_id = session['user_id']
@@ -174,7 +182,6 @@ def getData():
     }
     receivedMessages = mysql.query_db(message_query, message_data)
 
-
     # COUNT sent messages 
     # -------------------------------------------
     mysql = connectToMySQL('registrationsdb')
@@ -195,20 +202,13 @@ def getData():
     count_received = count_received_messages[0]['COUNT(receiver_id)']
     print('******** COUNT RECEIVED MESSAGES:', count_received)
 
-    # SEND ALL OF THIS DATA FOR HTML RESPONSE
-
-
     #SEND ALL OF THIS DATA TO BE MANIPULATED ON HTML
     return render_template('messages.html', otherUsers = otherUsers, receivedMessages = receivedMessages, count_sent = count_sent, count_received = count_received)
-
-
-
 
 
 # =====================================================
 #                 CREATE A MESSAGE
 # =====================================================
-
 @app.route('/create_message', methods=['POST'])
 def create_message():
     
@@ -223,10 +223,10 @@ def create_message():
 
     return redirect('/getData')
 
+
 # =====================================================
 #                 DELETE A MESSAGE
 # =====================================================
-
 @app.route('/delete_message', methods=['POST'])
 def delete_message():
 
@@ -238,6 +238,7 @@ def delete_message():
     mysql.query_db(query, data)
 
     return redirect('/getData')
+
 
 # ====================================================
 #        LOG OUT: clear session
