@@ -90,10 +90,17 @@
                                 <form action="/adminAccess" method="POST">
 
                                     <!-- use the value to make appropriate changes in users table in database  -->
-                                    <input type="hidden" name="deleteID" value="{{ user .id }}">
+                                    <input type="hidden" name="accessID" value="{{ user.id }}">
+                                    <input type="hidden" name="user_level" value="{{ user.user_level }}">
 
-                                    <button type="submit" class="btn btn-outline-success">Make Admin</button>
+                                    {% if user.user_level=='9' %}
                                     <button type="submit" class="btn btn-outline-danger">Remove Admin Access</button>
+
+                                    {% else %}
+                                    <button type="submit" class="btn btn-outline-success">Make Admin</button>
+                                    {% endif %}
+
+
 
                                 </form>
                             </td>

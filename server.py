@@ -167,6 +167,35 @@ def deleteUser():
 
 
 # =======================================================
+#       ADMIN ACCESS ROUTE: change user_level in db
+# =======================================================
+@app.route('/adminAccess', methods=['POST'])
+def adminAccess():
+
+    # if user is already level=1, update it to '9'
+    if request.form['user_level'] == '1':
+        user_level = 9
+    else:
+        user_level = 1
+
+    mysql = connectToMySQL('registrationsdb')
+    query = "UPDATE users SET user_level = '%(user_level)s' WHERE id = %(id)s;"
+    data = {
+        'user_level': user_level,
+        'id': request.form['accessID']
+    }
+    results = mysql.query_db(query, data)
+
+
+
+
+    return redirect('/admin')
+
+
+
+
+
+# =======================================================
 #                   IF USER:
 # =======================================================
 @app.route('/user')
