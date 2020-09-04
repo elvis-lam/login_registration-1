@@ -85,9 +85,11 @@ def register():
         # get user_id and store into session
         session['user_id'] = new_user_id
         session['user_name'] = request.form['first_name']
+        session['new_user'] = True
         print('SESSION:', session)
+        flash("Aww yeah, you successfully registered.  You can now log in using the same information you provided!", 'success')
 
-        return redirect('/getData')
+        return redirect('/')
     
 
 # ========================================================
@@ -156,13 +158,10 @@ def deleteUser():
 
     mysql = connectToMySQL('registrationsdb')
     query = "DELETE FROM users WHERE (id = %(deleteID)s);"
-
-    print("QUERY", query)
     data = {
         'deleteID': request.form['deleteID']
     }
     result = mysql.query_db(query, data)
-    print("RESULT", result)
 
     return redirect('/admin')
 
