@@ -146,28 +146,39 @@ def getData():
 
     #if the user has messages sent to them: CALCULATE THE DIFFERENCE BETWEEN THEN AND NOW FROM THE ABOVE QUERY RESULTS
     # if receivedMessages:
-
         
 # SELECT TIMEDIFF(NOW(), messages.created_at) FROM messages WHERE id = 13;
 
+    # COUNT sent messages 
+    # -------------------------------------------
+    mysql = connectToMySQL('registrationsdb')
+    query = "SELECT COUNT(user_id) FROM registrationsdb.messages WHERE user_id = %(user_id)s;"
+    data = { 'user_id': user_id }
+    count_sent_messages = mysql.query_db(query, data)
 
+    count_sent = count_sent_messages[0]['COUNT(user_id)']
+    print('******** COUNT SENT MESSAGES:', count_sent)
+
+    # COUNT received messages 
+    # -------------------------------------------
+    mysql = connectToMySQL('registrationsdb')
+    query = "SELECT COUNT(receiver_id) FROM registrationsdb.messages WHERE receiver_id = %(receiver_id)s;"
+    data = { 'receiver_id': user_id }
+    count_received_messages = mysql.query_db(query, data)
+ 
+    count_received = count_received_messages[0]['COUNT(receiver_id)']
+    print('******** COUNT RECEIVED MESSAGES:', count_received)
+
+    
 
 
     #SEND ALL OF THIS DATA TO BE MANIPULATED ON HTML
-    return render_template('messages.html', otherUsers = otherUsers, receivedMessages = receivedMessages)
+    return render_template('messages.html', otherUsers = otherUsers, receivedMessages = receivedMessages, count_sent = count_sent, count_received = count_received)
 
 
     
 
-    # # COUNT sent messages 
-    # # -------------------------------------------
-    # mysql = connectToMySQL("registrationsdb")
-    # query = "SELECT COUNT(user_id) FROM registrationsdb.messages WHERE user_id = %(user_id)s;"
-    # data = { 'user_id': session['user_id'] }
-    # count_sent_messages = mysql.query_db(query, data)
 
-    # session['count_sent'] = count_sent_messages
-    # print('******** COUNT SENT MESSAGES:', count_sent_messages)
 
     # # COUNT received messages 
     # # -------------------------------------------
