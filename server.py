@@ -186,14 +186,7 @@ def adminAccess():
     }
     results = mysql.query_db(query, data)
 
-
-
-
     return redirect('/admin')
-
-
-
-
 
 # =======================================================
 #                   IF USER:
